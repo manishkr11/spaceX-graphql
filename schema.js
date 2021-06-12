@@ -6,7 +6,8 @@ const {
     GraphQLInt,
     GraphQLSchema,
     GraphQLID,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } = graphql
 
 
@@ -30,6 +31,15 @@ const RocketType = new GraphQLObjectType({
         rocket_id: {type: GraphQLString},
         rocket_name: {type: GraphQLString},
         rocket_type: {type: GraphQLString},
+    })
+})
+
+const PostType = new GraphQLObjectType({
+    name: "Post",
+    fields: () => ({
+        id: {type: GraphQLString},
+        title: {type: GraphQLString},
+        body: {type: GraphQLString},
     })
 })
 
@@ -66,10 +76,70 @@ const RootQuery = new GraphQLObjectType({
                 return axios.get(`https://api.spacexdata.com/v3/rockets/${args.rocket_id}`)
                 .then(res => res.data)
             }
+        },
+        posts: {
+            type: new GraphQLList(PostType),
+            resolve(parent, args) {
+                return axios.get('https://jsonplaceholder.typicode.com/posts')
+                .then(res => res.data)
+            }
+        },
+        post: {
+            type: PostType,
+            args: {id:{type: GraphQLString}},
+            resolve(parent, args) {
+                return axios.get(`https://jsonplaceholder.typicode.com/posts/${args.id}`)
+                .then(res => res.data)
+            }
+        },
+    }
+})
+
+const mutation = new GraphQLObjectType({
+    name: 'mutation',
+    fields: {
+        addPost: {
+            type: PostType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLString)},
+                title: {type: GraphQLString},
+                body: {type: GraphQLString}
+            },
+            resolve(parent, args) {
+                return axios.post('https://jsonplaceholder.typicode.com/posts',{
+                    id: args.id,
+                    title: args.title,
+                    body: args.body
+                })
+                .then(res => res.data)
+            }
+        },
+        editPost: {
+            type: PostType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLString)},
+                title: {type: GraphQLString},
+                body: {type: GraphQLString}
+            },
+            resolve(parent, args) {
+                return axios.patch(`https://jsonplaceholder.typicode.com/posts/${args.id}`,args)
+                .then(res => res.data)
+            }
+        },
+        deletePost: {
+            type: PostType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLString)}
+            },
+            resolve(parent, args) {
+                return axios.delete(`https://jsonplaceholder.typicode.com/posts/${args.id}`)
+                .then(res => res.data)
+            }
         }
     }
 })
 
 module.exports = new GraphQLSchema({
-    query:RootQuery
+    query:RootQuery,
+    mutation
 })
