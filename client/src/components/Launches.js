@@ -5,6 +5,7 @@ import LaunchItem from './LaunchItem'
 import {
     useQuery,
   } from "@apollo/client";
+import MissionKey from './MissionKey';
 
 
  const LAUNCHES_QUERY = gql`
@@ -24,6 +25,8 @@ const Launches = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
         return <>
+                <h1 className="display-4 my-3">Launches</h1>
+                <MissionKey />
                 {data.launches.map((launch, i) => (
                                     <LaunchItem key={i} launch = {launch}/>
                                 ))}
