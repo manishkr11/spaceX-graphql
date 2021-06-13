@@ -24,7 +24,7 @@ function App() {
         <img 
           src={sx} 
           alt="spaceX"
-          style={{width:300,
+          style={{width:220,
           display: 'block', 
           margin: 'auto'}}/>
         <Route exact path="/" component={Launches}/>
