@@ -17,7 +17,6 @@ app.use(
   }),
 );
 
-//
 app.use(express.static('public'))
 
 app.get('*', (req,res) => {
@@ -26,6 +25,6 @@ app.get('*', (req,res) => {
 
 const PORT = process.env.PORT || 5000
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
     console.log(`server running at port ${PORT}`)
 });
