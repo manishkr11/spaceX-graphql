@@ -30,7 +30,9 @@ const Launch = ({match:{params} = {} } = {}) => {
         variables: { flight_number },
       });
 
-    const  {
+    const  {launch = {}} = data || {}
+
+    const {
         flight_number: Flight_number,
         launch_year,
         launch_success,
@@ -39,8 +41,7 @@ const Launch = ({match:{params} = {} } = {}) => {
             rocket_id,
             rocket_name,
             rocket_type
-        } = {}
-    } = data && data.launch || {}
+        } = {}} = launch
   
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
